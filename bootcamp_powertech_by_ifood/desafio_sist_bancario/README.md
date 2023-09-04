@@ -1,4 +1,4 @@
-# Sistema bancario
+# Sistema bancario - desafio 01
 
 ###  A ideia passada foi :
 
@@ -21,3 +21,8 @@ Durante o desafio, você terá a chance de aplicar seus conhecimentos em program
 
     * O sistema deve permitir realizar 3 saques diários com limite máximo de R$ 500,00 por saque. Caso o usuário não tenha saldo em conta, o sistema deve exibir uma mensagem informando que não será possível sacar o dinheiro por falta de saldo. Todos os saques devem ser armazenados em uma variável e exibidos na operação de extrato.
 
+#### Otimizando desafio 01 - desafio 02
+
+* DESCRIÇÃO:
+
+    * Neste desafio, você terá a oportunidade de otimizar o Sistema Bancário previamente desenvolvido com o uso de funções Python. O objetivo é aprimorar a estrutura e a eficiência do sistema, implementando as operações de depósito, saque e extrato em funções específicas. Você terá a chance de refatorar o código existente, dividindo-o em funções reutilizáveis, facilitando a manutenção e o entendimento do sistema como um todo. Prepare-se para aplicar conceitos avançados de programação e demonstrar sua habilidade em criar soluções mais elegantes e eficientes utilizando Python.
