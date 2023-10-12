@@ -1,73 +1,159 @@
 
-n_deposito = 0
-n_saque = 0
-extrato = ""
-saldo = 3000.00
-opcao = 0
+def menu():
 
-menu = """\nQual acao voce ira executar hoje?
-[1] Deposito
-[2] Saque
-[3] Extrato
-[0] Sair\n
-"""
+    menu ="""\nQual acao voce ira executar hoje?
+    [1] Deposito
+    [2] Saque
+    [3] Extrato
+    [4] Criar Conta
+    [5] Listar Contas
+    [6] Criar Usuario
+    [0] Sair\n"""
+    op = int(input(f"{menu}\nOpçao: "))
 
-def deposito(valor_deposito: float):
+    return op
 
-    if valor_deposito <= 0 :
+def deposito(valor, saldo, extrato):
+
+    if valor <= 0 :
             print("Esse valor não pode ser depositado!!")
 
     else:
         print("Depositando....")
+        saldo += valor
+        extrato += f"\nDeposito de {valor:.2f}"
+        print(f"Saldo total: {saldo}")
+    return saldo, extrato
 
 
-def saque(valor_saque, saldo = saldo, saque= n_saque):
+def saque(*, valor, saldo, extrato):
 
-    if valor_saque < 501:
-        if valor_saque > saldo:
+    n_saque = 0
+    limite_saques = 3 
+    limite = 501
+
+    if valor < limite:
+        if valor > saldo:
                 print("Valor indiponivel")
 
-        elif saque < 3 :
+        elif n_saque < limite_saques:
             print("Sancando.....")
-            saque += 1
+            saldo -= valor
+            n_saque += 1
+            extrato += f"\nSaque de {valor:.2f}"
+            print(f"Saldo atual: R${saldo}")
         else: 
                 print("Numero de saque atingido")
 
     else:
             print('Valor não permitido, max 500')
 
-def extrato():
-        print(f"""\nForam executados: \n
-            {n_deposito} Depositos\n
-            {n_saque} Saques de no maximo R$500,00\n
-            Saldo atual: R$ {saldo:.2f}""")
+    return saldo, extrato
 
-while True:
+def ex_extrato(saldo, /, *, extrato):
+            
+    print("Não foram realizadas movimentações." if not extrato else extrato)
+    print(f"\nSaldo total: R$ {saldo:.2f}")
 
-    opcao = int(input(menu + "Opcao: "))
+l_contas = list()
 
-    if opcao == 1:
-        valor_deposito = float(input("\nqual valor sera depositado?? R$ "))
-        deposito(valor_deposito=valor_deposito)
-        saldo += valor_deposito
-        n_deposito +=1
-        print(f"total na conta: {saldo:.2f}")
+def criar_conta(agencia, numero_conta):
+        conta = dict()
+        
+        while True:
+            op = input("deseja criar??S/N: ").upper()
+            if op == "S":
+                agencia += 1
+                numero_conta += 1
+                cpf = conta["cpf"] = input("cpf:")
+                conta["agencia"] = agencia
+                conta["numero_conta"] = numero_conta
+                v = verificar_cpf(cpf= cpf, clientes= l_contas)
+                if v == "v":
+                    print("cpf existente")
+                    break
+                else:
+                    l_contas.append(conta.copy())
+                    print("conta criada!!")
+            else:
+                break
+
+        return agencia, numero_conta
+                
+def listar_conta(contas= l_contas):
+    print(contas)
+    for conta in l_contas:
+        linha = f"""Agência: {conta['agencia']}\nC/C: {conta['numero_conta']}\nTitular:{conta['cpf']}"""
+        print(linha)
 
 
+def verificar_cpf(cpf, clientes):
 
-    elif opcao == 2 :
-        valor_saque = float(input("Qual o valor de saque? "))
-        saque(valor_saque=valor_saque)
-        saldo -= valor_saque
-        n_saque += 1
-        print(f"Saldo: {saldo:.2f}")
+    for cliente in clientes:
+        if cliente["cpf"] == cpf:
+            return "v"
+        else:
+            continue
+        
+
+
+def criar_cliente():
+    clientes = list()
+    cliente = dict()
+
+    while True:
+            cliente.clear()
+            op = input("vamos continuar?? S/N: ").upper()
+            if op == "S":
+                cliente["nome"] = str(input("Qual o seu nome? "))
+                cpf = cliente["cpf"] = str(input("Seu cpf: "))
+                v = verificar_cpf(cpf=cpf, clientes= clientes)
+                if v == "v":
+                    print("cpf existe")
+                    print(clientes)
+                    break
+                clientes.append(cliente.copy())
+            else:
+                break
     
 
-    elif opcao == 3:
-        extrato()
+def main():
+    
+    extrato = ""
+    saldo = 0
+    opcao = 0
 
-    else:
-        print("Saindo.....")
-        break
+    while True:
 
-print("Execucao finalizada, ate logo")
+        opcao = menu()
+        agencia = 0000
+        numero_conta = 00
+
+        if opcao == 1:
+            valor = float(input("\nqual valor sera depositado?? R$ "))
+            saldo, extrato = deposito(valor= valor, saldo= saldo, extrato= extrato)
+
+        elif opcao == 2 :
+            valor = float(input("Qual o valor de saque? "))
+            saldo, extrato = saque(valor= valor, saldo= saldo, extrato=extrato)
+        
+
+        elif opcao == 3:
+            ex_extrato(saldo, extrato= extrato)
+
+        elif opcao == 4:
+            criar_conta(agencia= agencia, numero_conta = numero_conta)
+
+        elif opcao == 5:
+            listar_conta()
+        
+        elif opcao == 6:
+            criar_cliente()
+
+        else:
+            print("Saindo.....")
+            break
+
+    print("Execucao finalizada, ate logo")
+
+main()
